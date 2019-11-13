@@ -9,15 +9,15 @@
 import Foundation
 
 class HeadlineHelper {
-    static let responseKey = "articles"
-    static func createHeadlineList(params: [String:Any]) -> [Headline] {
-        let headlines = params[HeadlineHelper.responseKey] as! [[String:Any]]
-        var list: [Headline] = []
-        for item in headlines {
-            list.append(Headline(attributes: item))
-        }
-        return list
-    }
+//    static let responseKey = "articles"
+//    static func createHeadlineList(params: [String:Any]) -> [Headline] {
+//        let headlines = params[HeadlineHelper.responseKey] as! [[String:Any]]
+//        var list: [Headline] = []
+//        for item in headlines {
+//           // list.append(Headline(attributes: item))
+//        }
+//        return list
+//    }
 
     static func getFormattedDate(date: String) -> String {
         let dateFormatter = DateFormatter()

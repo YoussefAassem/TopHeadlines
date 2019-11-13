@@ -6,20 +6,33 @@
 //  Copyright © 2019 TTS. All rights reserved.
 //
 
-import Foundation
+import Moya
 
-class HeadlineService {
-    let getTopHeadlinesURL = "https://newsapi.org/v2/top-headlines?sources=the-next-web&apiKey=1e720f9e9cd845bea37152f911eb5dd9"
-    func fetchHeadlines(completion : @escaping ([String : Any]) -> Void) {
-        guard let requestURL = URL(string: getTopHeadlinesURL) else { return }
-        let task = URLSession.shared.dataTask(with: requestURL) {
-            (data, response, error) in
-            print("Description : \(requestURL.description)")
-            if error == nil,let usableData = data {
-                let json = try? JSONSerialization.jsonObject(with: usableData, options: []) as? [String: Any]
-                completion(json ?? [:])
+enum CallState {
+    case success
+    case failure
+}
+
+class HeadlineService: HeadlineNetworkManager {
+    internal var provider: MoyaProvider<HLine>?
+    init() {
+        self.provider = MoyaProvider<HLine>()
+    }
+
+    func fetchHeadlines(completion: @escaping ([Headline]?, CallState) -> Void) {
+        provider?.request(.listTopHeadlines) { result in
+            switch result {
+            case .success(let response):
+                do {
+                    let data = response.data
+                    let listHeadlines = try! JSONDecoder().decode(HeadlineResponse.self, from: data) as HeadlineResponse
+                    completion(listHeadlines.headlines,.success)
+                } catch {
+                    completion(nil,.success)
+                }
+            case .failure:
+                completion(nil, .failure)
             }
         }
-        task.resume()
     }
 }

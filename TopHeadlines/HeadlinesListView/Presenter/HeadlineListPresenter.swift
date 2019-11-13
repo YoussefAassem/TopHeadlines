@@ -8,11 +8,10 @@
 
 import UIKit
 
-class HeadlineListPresenter: HeadlineListPresenterProtocol {
-    var view: HeadlineListViewProtocol?
-    var interactor: HeadlineListInteractorProtocol?
+class HeadlineListPresenter {
     var wireframe: HeadlineListWireframeProtocol?
-
+    var view: HeadlineViewDelegate?
+    var interactor: HeadlineInteractorDelegate?
     func getHeadlineList() {
         interactor?.fetchHeadlineList()
     }
@@ -24,4 +23,12 @@ class HeadlineListPresenter: HeadlineListPresenterProtocol {
       func showHeadlineDetail(for headline: Headline, from view: UIViewController) {
         wireframe?.pushToHeadlineDetail(with: headline, from: view)
     }
+}
+
+extension HeadlineListPresenter: HeadlinePresenterDelegate {
+    func didntFetchHeadlineList() {
+      //  view?.showHeadlineList(list: )
+    }
+
+
 }

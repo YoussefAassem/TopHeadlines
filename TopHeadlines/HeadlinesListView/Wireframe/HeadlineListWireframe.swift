@@ -11,10 +11,13 @@ import UIKit
 class HeadlineListWireframe: HeadlineListWireframeProtocol {
     let detailViewIdentifier = "HeadlineDetailView"
     class func createHeadlineListModule(for view: HeadlineListViewProtocol) {
-        let presenter: HeadlineListPresenterProtocol = HeadlineListPresenter()
+        let manager: HeadlineNetworkManager = HeadlineService()
+        let presenter: HeadlinePresenterDelegate = HeadlineListPresenter() 
+        let interactor = HeadlineListInteractor()
+        interactor.presenter = presenter
+        interactor.setNetworkManager(networkManager: manager)
+        presenter.interactor = interactor
         presenter.view = view
-        presenter.interactor = HeadlineListInteractor()
-        presenter.interactor?.presenter = presenter
         presenter.wireframe = HeadlineListWireframe()
         view.presenter = presenter
     }

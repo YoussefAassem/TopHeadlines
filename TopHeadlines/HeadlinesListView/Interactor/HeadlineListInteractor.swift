@@ -9,17 +9,23 @@
 import Foundation
 
 class HeadlineListInteractor: HeadlineListInteractorProtocol {
-    var presenter: HeadlineListPresenterProtocol?
-    var headlineService: HeadlineService?
+    var presenter: HeadlinePresenterDelegate?
 
-    init() {
-        headlineService = HeadlineService()
+    private var manager: HeadlineNetworkManager?
+    func setNetworkManager(networkManager: HeadlineNetworkManager) {
+        self.manager = networkManager
     }
-
     func fetchHeadlineList() {
-        headlineService?.fetchHeadlines{ response in
-           let listHeadlines = HeadlineHelper.createHeadlineList(params: response)
-           self.presenter?.didFetchHeadlineList(listHeadlines: listHeadlines)
+        guard let networkManager = manager else { return }
+        networkManager.fetchHeadlines{ (response,status)  in
+            switch status {
+            case .success:
+                guard let headlinesList = response else { return}
+                self.presenter?.didFetchHeadlineList(listHeadlines: headlinesList)
+            case .failure:
+               self.presenter?.didntFetchHeadlineList()
+            }
+
         }
     }
 

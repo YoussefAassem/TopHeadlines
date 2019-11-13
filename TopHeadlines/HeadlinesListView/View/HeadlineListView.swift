@@ -56,3 +56,25 @@ extension HeadlineListView: UICollectionViewDataSource, UICollectionViewDelegate
      
 }
 
+class HeadlinesView: UIViewController {
+    var presenter: PresenterDelegate?
+    var listHeadlines: [Headline] = []
+    @IBOutlet var collectionView: UICollectionView!
+    let cellIdentifier = "headlineCell"
+
+    override func viewDidLoad() {
+        presenter?.fetchHeadlines()
+    }
+}
+
+extension HeadlinesView: ViewDelegate {
+
+    func showHeadlines(listHeadline: [Headline]) {
+        self.listHeadlines = listHeadline
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+    }
+
+
+}
